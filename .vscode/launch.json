@@ -1,0 +1,13 @@
+{
+    "version": "0.1.0",
+    "configurations": [
+        {
+            "name": "mad-pod",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "module": "mad_pod.command_line.cmdlet",
+            "args": ["--cmd1", "python strat.py"]
+        }
+    ]
+}
