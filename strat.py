@@ -1,6 +1,6 @@
 import sys
 import math
-
+print("start", file=sys.stderr, flush=True)
 # Auto-generated code below aims at helping you parse
 # the standard input according to the problem statement.
 

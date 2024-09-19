@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "mad-pod"
+version = "0.1.0"
+description = "Mad Pod racing simulation"
+authors = ["slavvc <slavvc@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+vector = "^1.5.1"
+numpy = "^2.1.1"
+pyopengltk = "^0.0.4"
+moderngl = "^5.11.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+mad-pod-cmd = "mad_pod.command_line.cmdlet:main"
