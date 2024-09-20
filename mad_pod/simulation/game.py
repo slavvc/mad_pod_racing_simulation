@@ -30,7 +30,7 @@ class Game:
         pods = Pods()
         for i in range(number_of_pods):
             pods.add(Pod(
-                pos=checkpoints[0],
+                pos=vector.obj(x=checkpoints[0].x, y=checkpoints[0].y),
                 vel=vector.obj(x=0, y=0),
                 ang=0
             ))
@@ -74,7 +74,7 @@ class Game:
             raise RuntimeError("number of strategy outputs is not equal to number of pods")
         pod_controls = []
         for pod, strategy_output in zip(self.pods, strategy_outputs):
-            target_angle = (vector.VectorObject2D.from_xy(*strategy_output.target_pos) - pod.pos).rho
+            target_angle = (vector.VectorObject2D.from_xy(*strategy_output.target_pos) - pod.pos).phi
             match strategy_output.thrust:
                 case 'BOOST':
                     thrust = 200.0
@@ -82,7 +82,7 @@ class Game:
                     thrust = float(x)
             pod_control = PodControl(
                 thrust=thrust,
-                target_angle=np.degrees(target_angle)
+                target_angle=target_angle
             )
             pod_controls.append(pod_control)
         

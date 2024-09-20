@@ -9,6 +9,7 @@ import moderngl
 from queue import Queue
 import time
 import math
+import numpy as np
 
 from .data import VisualizationData, PodVisualizationData, VisualizationStopCommand
 from ..constants import WORLD_H, WORLD_W, CHECKPOINT_RADIUS
@@ -26,13 +27,15 @@ class GlFrame(OpenGLFrame):
         self, *args, 
         data_queue: Queue[VisualizationData | VisualizationStopCommand], 
         factor: float, 
-        frame_duration: float, 
+        frame_duration: float,
+        label: tk.Label,
         **kwargs
     ):
         self.data_queue = data_queue
         self.data_queue_exhausted = False
         self.factor = factor
         self.frame_duration = frame_duration
+        self.label = label
         super().__init__(*args, **kwargs)
         self.state = VisualizationState()
 
@@ -98,6 +101,10 @@ class GlFrame(OpenGLFrame):
     def redraw(self):       
 
         data = self._calc_data()
+        report=(
+            f"ang = {np.degrees(data.pods[0].ang):.1f} ∈ [{np.degrees(self.state.prev_frame.pods[0].ang):.1f}, {np.degrees(self.state.last_frame.pods[0].ang):.1f}]"
+        )
+        self.label.config(text=report)
 
         # print(f"vis: {data}")
 
@@ -133,13 +140,16 @@ class GlFrame(OpenGLFrame):
 
 def visualize_game(data: Queue[VisualizationData | VisualizationStopCommand]):
     root = tk.Tk()
-    scale_factor = 1 / 20
+    scale_factor = 1 / 5
     frame_duration = 0.3
+    label = tk.Label(root, text="label")
+    label.pack()
     frame = GlFrame(
         root,
         data_queue=data,
         factor=scale_factor,
         frame_duration=frame_duration,
+        label=label,
         width=int(WORLD_W * scale_factor), 
         height=int(WORLD_H * scale_factor)
     )
