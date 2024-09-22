@@ -98,6 +98,17 @@ class GlFrame(OpenGLFrame):
             ]
         )
 
+    def _get_pod_color(self, pod_n: int) -> tuple[float, float, float]:
+        colors = [
+            (1, 0, 0),
+            (0, 1, 0),
+            (0, 0, 1),
+            (0, 1, 1),
+            (1, 0, 1),
+            (1, 1, 0)
+        ]
+        return colors[pod_n % len(colors)]
+
     def redraw(self):       
 
         data = self._calc_data()
@@ -118,17 +129,19 @@ class GlFrame(OpenGLFrame):
             glVertex2f(checkpoint.x * self.factor , checkpoint.y * self.factor)
         glEnd()
 
-        glColor3f(0.0,0.0,1.0)
+        # glColor3f(0.0,0.0,1.0)
         glPointSize(200 * self.factor)
         glBegin(GL_POINTS)
-        for pod in data.pods:
+        for i, pod in enumerate(data.pods):
+            glColor3f(*self._get_pod_color(i))
             glVertex2f(pod.pos.x * self.factor, pod.pos.y * self.factor)
         glEnd()
         
-        glColor3f(1.0,0.0,0.0)
+        # glColor3f(1.0,0.0,0.0)
         # glLineWidth(3)
         glBegin(GL_LINES)
-        for pod in data.pods:
+        for i, pod in enumerate(data.pods):
+            glColor3f(*self._get_pod_color(i + 1))
             glVertex2f(pod.pos.x * self.factor, pod.pos.y * self.factor)
             r = 300 * self.factor
             dx = r * math.cos(pod.ang)

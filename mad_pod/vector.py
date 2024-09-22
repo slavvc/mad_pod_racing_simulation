@@ -22,7 +22,7 @@ class Vector:
     def __rmul__(self, other: float) -> Vector:
         return self * other
 
-    def __div__(self, other: float) -> Vector:
+    def __truediv__(self, other: float) -> Vector:
         return Vector(x=self.x / other, y=self.y / other)
     
     @property

@@ -7,7 +7,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "module": "mad_pod.command_line.cmdlet",
-            "args": ["--cmd1", "python strat.py"]
+            "args": ["--cmd", "python strat.py"]
         }
     ]
 }

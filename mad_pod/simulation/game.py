@@ -4,9 +4,10 @@ from typing import Optional
 
 import random
 import sys
+import math
 
 from ..vector import Vector
-from ..constants import WORLD_H, WORLD_W, CHECKPOINT_RADIUS
+from ..constants import WORLD_H, WORLD_W, CHECKPOINT_RADIUS, POD_RADIUS
 from .pod_physics import Pods, Pod, PodControl
 from ..utils import get_relative_angle, degrees
 from ..strategy_communication.messages import StrategyInput, StrategyOutput
@@ -28,17 +29,24 @@ class Game:
         random_seed = random.randrange(sys.maxsize) if random_seed is None else random_seed
         rand = random.Random(random_seed)
         print(f"Seed is {random_seed}")
-        checkpoints = []
+        checkpoints: list[Vector] = []
         for i in range(number_of_checkpoints):
             x = rand.randint(int(WORLD_W*0.1), int(WORLD_W*0.9))
             y = rand.randint(int(WORLD_H*0.1), int(WORLD_H*0.9))
             checkpoints.append(Vector(x=x, y=y))
         pods = Pods()
+        pod_start_vec = checkpoints[1] - checkpoints[0]
+        pod_start_vec /=pod_start_vec.rho
+        pod_start_vec = pod_start_vec.rotate(-math.pi / 2)
+        pod_start_dist = POD_RADIUS * 2
+        pod_start_line_len = pod_start_dist * (number_of_pods - 1)
+        pod_start_vec_origin = checkpoints[0] - pod_start_vec * (pod_start_line_len / 2)
         for i in range(number_of_pods):
+            pos = pod_start_vec_origin + pod_start_vec * pod_start_dist * i
             pods.add(Pod(
-                pos=Vector(x=checkpoints[0].x, y=checkpoints[0].y),
+                pos=pos,
                 vel=Vector(x=0, y=0),
-                ang=0
+                ang=(checkpoints[1] - pos).phi
             ))
         return Game(
             pods=pods,
