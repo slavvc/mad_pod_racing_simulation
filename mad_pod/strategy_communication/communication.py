@@ -5,8 +5,6 @@ from threading import Thread
 
 from .messages import StrategyInput, StrategyOutput
 
-from contextlib import contextmanager
-
 
 class Strategy:
     class _StopCommand: pass
@@ -19,7 +17,7 @@ class Strategy:
 
     def _run(self, initial_state: StrategyInput) -> _CoroutineType:
         with Popen(
-            self.cmd_line, shell=True,
+            self.cmd_line, shell=False,
             stdin=PIPE,
             stdout=PIPE,
             stderr=PIPE
@@ -53,6 +51,7 @@ class Strategy:
             proc.stdin.close()
             proc.stdout.close()
             proc.stderr.close()
+            proc.terminate()
 
     def _read_queue(self, queue: Queue) -> list[bytes]:
         result = []
