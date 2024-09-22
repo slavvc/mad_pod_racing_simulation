@@ -138,20 +138,18 @@ class GlFrame(OpenGLFrame):
 
         glFlush()
 
-def visualize_game(data: Queue[VisualizationData | VisualizationStopCommand]):
+def visualize_game(data: Queue[VisualizationData | VisualizationStopCommand], window_scale: float = 1/5, frame_duration: float = 0.3):
     root = tk.Tk()
-    scale_factor = 1 / 5
-    frame_duration = 0.3
     label = tk.Label(root, text="label")
     label.pack()
     frame = GlFrame(
         root,
         data_queue=data,
-        factor=scale_factor,
+        factor=window_scale,
         frame_duration=frame_duration,
         label=label,
-        width=int(WORLD_W * scale_factor), 
-        height=int(WORLD_H * scale_factor)
+        width=int(WORLD_W * window_scale), 
+        height=int(WORLD_H * window_scale)
     )
     frame.pack(fill=tk.BOTH, expand=tk.YES)
     frame.animate = 1
