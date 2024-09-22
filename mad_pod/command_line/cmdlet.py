@@ -13,10 +13,11 @@ def run_vis1_gltk(
     cmdline: str, 
     step_limit: int = 500, 
     window_scale: float = 1/5, 
-    frame_duration: float = 0.3
+    frame_duration: float = 0.3,
+    seed: Optional[int] = None
 ):
     queue: Queue[VisualizationData | VisualizationStopCommand] = Queue()
-    play_thread = Thread(target=run1, args=[cmdline, queue, step_limit])
+    play_thread = Thread(target=run1, args=[cmdline, queue, step_limit, seed])
     play_thread.daemon = False
     play_thread.start()
     visualize_game(queue, window_scale, frame_duration)
@@ -24,10 +25,11 @@ def run_vis1_gltk(
 def run1(
     cmdline: str, 
     queue: Optional[Queue[VisualizationData | VisualizationStopCommand]] = None, 
-    step_limit: int = 500
+    step_limit: int = 500,
+    seed: Optional[int] = None
 ):
     strategy = Strategy(cmdline)
-    game = Game.create(1, 4)
+    game = Game.create(1, 4, seed)
     match queue:
         case None:
             vis_cb = None
@@ -50,19 +52,22 @@ def main():
     parser.add_argument('--vis-scale', type=float)
     parser.add_argument('--vis-frame-duration', type=float)
     parser.add_argument('--limit', type=int)
+    parser.add_argument('--seed', type=int)
     args = parser.parse_args()
     limit = 500 if args.limit is None else args.limit
     window_scale = 1/5 if args.vis_scale is None else args.vis_scale
     frame_duration = 0.3 if args.vis_frame_duration is None else args.vis_frame_duration
+    seed = None if args.seed == -1 else args.seed
     if args.vis is not None:
         run_vis1_gltk(
             args.cmd1, 
             step_limit=limit, 
             window_scale=window_scale, 
-            frame_duration=frame_duration
+            frame_duration=frame_duration,
+            seed=seed
         )
     else:
-        run1(args.cmd1, step_limit=limit)
+        run1(args.cmd1, step_limit=limit, seed=seed)
 
 if __name__ == '__main__':
     main()

@@ -9,10 +9,10 @@ import moderngl
 from queue import Queue
 import time
 import math
-import numpy as np
 
 from .data import VisualizationData, PodVisualizationData, VisualizationStopCommand
 from ..constants import WORLD_H, WORLD_W, CHECKPOINT_RADIUS
+from ..utils import degrees
 
 
 @dataclass
@@ -90,7 +90,7 @@ class GlFrame(OpenGLFrame):
             checkpoints=self.state.last_frame.checkpoints,
             pods=[
                 PodVisualizationData(
-                    pos=podb.pos * k + poda.pos * (1 - k), # type: ignore
+                    pos=podb.pos * k + poda.pos * (1 - k),
                     ang=podb.ang * k + poda.ang * (1 - k)
                 )
                 for poda, podb 
@@ -102,7 +102,7 @@ class GlFrame(OpenGLFrame):
 
         data = self._calc_data()
         report=(
-            f"ang = {np.degrees(data.pods[0].ang):.1f} ∈ [{np.degrees(self.state.prev_frame.pods[0].ang):.1f}, {np.degrees(self.state.last_frame.pods[0].ang):.1f}]"
+            f"ang = {degrees(data.pods[0].ang):.1f} ∈ [{degrees(self.state.prev_frame.pods[0].ang):.1f}, {degrees(self.state.last_frame.pods[0].ang):.1f}]"
         )
         self.label.config(text=report)
 

@@ -1,16 +1,16 @@
 from dataclasses import dataclass
 
-import vector
+from ..vector import Vector
 
 
 class VisualizationStopCommand: pass
 
 @dataclass
 class PodVisualizationData:
-    pos: vector.VectorObject2D
+    pos: Vector
     ang: float
 
 @dataclass
 class VisualizationData:
-    checkpoints: list[vector.VectorObject2D]
+    checkpoints: list[Vector]
     pods: list[PodVisualizationData]

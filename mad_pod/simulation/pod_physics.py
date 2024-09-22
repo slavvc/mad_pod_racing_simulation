@@ -1,9 +1,8 @@
-import vector
-import numpy as np
 from dataclasses import dataclass, field
 
 from ..constants import POD_ROTATION_SPEED, POD_SPEED_REDUCTION
-from .utils import get_relative_angle
+from ..utils import get_relative_angle, clamp
+from ..vector import Vector
 
 
 @dataclass
@@ -13,8 +12,8 @@ class PodControl:
 
 @dataclass
 class Pod:
-    pos: vector.VectorObject2D
-    vel: vector.VectorObject2D
+    pos: Vector
+    vel: Vector
     ang: float
 
 @dataclass
@@ -38,8 +37,8 @@ class Pods:
             raise RuntimeError("number of pod_controls must be equal to number of pods")
         for pod, pod_control in zip(self.pods, pod_controls):
             relative_angle = get_relative_angle(pod_control.target_angle, pod.ang)
-            pod.ang += np.clip(relative_angle, -POD_ROTATION_SPEED, POD_ROTATION_SPEED)
-            pod.vel += pod_control.thrust * vector.obj(x=1, y=0).rotateZ(pod.ang)
+            pod.ang += clamp(relative_angle, -POD_ROTATION_SPEED, POD_ROTATION_SPEED)
+            pod.vel += pod_control.thrust * Vector(x=1, y=0).rotate(pod.ang)
             pod.pos += pod.vel
             pod.vel *= POD_SPEED_REDUCTION
         

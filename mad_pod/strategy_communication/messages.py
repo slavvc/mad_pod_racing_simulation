@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import Optional, Literal, Tuple
 from dataclasses import dataclass
-import vector
 
 @dataclass
 class StrategyInput:
